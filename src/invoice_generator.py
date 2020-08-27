@@ -6,3 +6,8 @@ from weasyprint import HTML
 
 def get_invoice_template():
     return "invoice number: {}"
+
+
+def generate_invoice(invoice_number):
+    tmpl = get_invoice_template()
+    return tmpl.format(invoice_number)
