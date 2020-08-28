@@ -5,9 +5,18 @@ from weasyprint import HTML
 
 
 def get_invoice_template():
-    return "invoice number: {}"
+    return "Date: {invoice_date}," \
+           "Number: {invoice_number}"
 
 
-def generate_invoice(invoice_number):
+def get_invoice_data(invoice):
+    return {
+        "invoice_number": invoice.number,
+        "invoice_date": str(invoice.date)
+    }
+
+
+def generate_invoice(invoice):
     tmpl = get_invoice_template()
-    return tmpl.format(invoice_number)
+    invoice_data = get_invoice_data(invoice)
+    return tmpl.format(**invoice_data)
