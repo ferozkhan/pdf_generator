@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -8,6 +8,11 @@ app = Flask(__name__)
 @app.route('/')
 def invoice_template():
     return render_template("invoice_v1.html")
+
+
+# @app.route('/generate_invoice')
+# def generate_invoice():
+#     posted_data = request.get_json() or {}
 
 
 if __name__ == '__main__':
