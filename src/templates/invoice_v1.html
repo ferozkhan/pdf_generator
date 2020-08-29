@@ -72,7 +72,9 @@
         border-top: 2px solid #eee;
         font-weight: bold;
     }
-    
+    .right{
+        text-align: right;
+    }
     @media only screen and (max-width: 600px) {
         .invoice-box table tr.top table td {
             width: 100%;
@@ -107,7 +109,7 @@
     <div class="invoice-box">
         <table cellpadding="0" cellspacing="0">
             <tr class="top">
-                <td colspan="2">
+                <td colspan="4">
                     <table>
                         <tr>
                             <td class="title">
@@ -115,9 +117,9 @@
                             </td>
                             
                             <td>
-                                Invoice #: 123<br>
-                                Created: January 1, 2015<br>
-                                Due: February 1, 2015
+                                Invoice #: {{invoice_number}}<br>
+                                Created: {{created_date}}<br>
+                                Due: {{due_date}}
                             </td>
                         </tr>
                     </table>
@@ -125,12 +127,11 @@
             </tr>
             
             <tr class="information">
-                <td colspan="2">
+                <td colspan="4">
                     <table>
                         <tr>
                             <td>
-                                Python<br>
-                                3.8<br>
+                                To:
                             </td>
                             
                             <td>
@@ -146,29 +147,38 @@
                 <td>
                     Payment Method
                 </td>
-                
                 <td>
-                    Check #
+                    Payment Type
+                </td>
+                <td colspan="2" class="right">
+                    Number #
                 </td>
             </tr>
             
             <tr class="details">
                 <td>
-                    Check
+                    {{payment_method}}
                 </td>
-                
                 <td>
-                    1000
+                    {{payment_type}}
+                </td>
+                <td colspan="2" class="right">
+                    {{payment_number}}
                 </td>
             </tr>
             
             <tr class="heading">
                 <td>
-                    Item
+                    Description
                 </td>
-                
                 <td>
-                    Price
+                    Quantity
+                </td>
+                <td>
+                    Rate
+                </td>
+                <td>
+                    Amount
                 </td>
             </tr>
             
@@ -176,35 +186,21 @@
                 <td>
                     Website design
                 </td>
-                
                 <td>
-                    $300.00
+                    2
                 </td>
-            </tr>
-            
-            <tr class="item">
                 <td>
-                    Hosting (3 months)
+                    $600.00
                 </td>
-                
                 <td>
-                    $75.00
-                </td>
-            </tr>
-            
-            <tr class="item last">
-                <td>
-                    Domain name (1 year)
-                </td>
-                
-                <td>
-                    $10.00
+                    $600.00
                 </td>
             </tr>
             
             <tr class="total">
-                <td></td>
-                
+                <td colspan="3">
+
+                </td>
                 <td>
                    Total: $385.00
                 </td>

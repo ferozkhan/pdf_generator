@@ -10,11 +10,6 @@ def invoice_template():
     return render_template("invoice_v1.html")
 
 
-# @app.route('/generate_invoice')
-# def generate_invoice():
-#     posted_data = request.get_json() or {}
-
-
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)

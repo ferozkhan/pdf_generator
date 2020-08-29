@@ -1,9 +1,10 @@
 import os
 import random
-
-from ..invoice_generator import get_invoice_template, prepare_invoice, generate_invoice
 from collections import namedtuple
 from datetime import datetime
+
+from ..invoice_generator import (generate_invoice, get_invoice_template,
+                                 prepare_invoice)
 
 
 def test_invoice_html_template():
