@@ -1,12 +1,17 @@
+"""Main application file."""
+
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def invoice_template():
+    """
+    :return: str
+    """
     return render_template("invoice_v1.html")
 
 

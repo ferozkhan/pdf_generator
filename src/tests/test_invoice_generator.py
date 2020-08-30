@@ -1,3 +1,5 @@
+"""Unit tests for invoice generator."""
+
 import os
 import random
 from collections import namedtuple
