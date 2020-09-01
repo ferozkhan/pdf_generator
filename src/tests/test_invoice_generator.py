@@ -28,14 +28,13 @@ def test_invoice_data():
     assert f'Date: {invoice.date}' in res
 
 
-def test_invoice_is_generated(tmpdir):
-    invoice_number = random.randrange(1000, 2000)
+def test_invoice_is_generated(tmpdir, invoice_data):
     today = str(datetime.today().date())
     invoice = namedtuple("invoice", "number"
                                     " date")
-    invoice.date = today
-    invoice.number = invoice_number
+    invoice.date = invoice_data.get('data')
+    invoice.number = invoice_data.get('number')
     res = prepare_invoice(invoice)
-    invoice_name = f'invoice_{today}_{invoice_number}.pdf'
+    invoice_name = f'invoice_{today}_{invoice.number}.pdf'
     generate_invoice(res, tmpdir, invoice_name)
     assert invoice_name in os.listdir(tmpdir)
