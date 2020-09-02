@@ -7,6 +7,15 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
+@app.route('/invoice')
+def get_invoice():
+    """
+    generate invoice url and return
+    :return: str
+    """
+    return 
+
+
 @app.route('/')
 def invoice_template():
     """
