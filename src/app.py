@@ -13,7 +13,7 @@ def get_invoice():
     generate invoice url and return
     :return: str
     """
-    return 
+    return ''
 
 
 @app.route('/')
