@@ -7,6 +7,15 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
+@app.route('/pdf')
+def get_pdf():
+    """
+    generate invoice url and return pdf
+    :return: str
+    """
+    return ''
+
+
 @app.route('/invoice')
 def get_invoice():
     """
