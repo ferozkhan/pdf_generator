@@ -3,7 +3,10 @@ import os
 import tempfile
 
 import pytest
-from flaskr import flaskr
+
+from flask.testing import FlaskClient
+
+from src.app import app
 
 
 @pytest.fixture
@@ -13,15 +16,12 @@ def invoice_data():
         return json.load(f)
 
 
+class TestClient(FlaskClient):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
 @pytest.fixture
 def client():
-    _db, flaskr.app.config['DATABASE'] = tempfile.mkstemp()
-    flaskr.app.config['TESTING'] = True
-
-    with flaskr.app.test_client() as client:
-        with flaskr.app.app_context():
-            flaskr.init_db()
-        yield client
-
-    os.close(_db)
-    os.unlink(flaskr.app.config['DATABASE'])
+    app.test_client_class = TestClient
+    return app.test_client()
