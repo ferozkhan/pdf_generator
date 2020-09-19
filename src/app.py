@@ -1,19 +1,20 @@
 """Main application file."""
-
+import logging
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, request, render_template_string
 from flask_sqlalchemy import SQLAlchemy
 
-from src.app_exception import BadRequestException
 
 app = Flask(__name__)
 app.config.from_object(os.environ.get('APP_SETTINGS'))
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 db = SQLAlchemy(app)
 
+log = logging.getLogger(__name__)
 
 FORM = """
+{% if errors %}<p>Error: {{errors}}<p>{% endif %}
 <form action="/pdf">
 <input type="text" name="location"/>
 <input type="submit" value="generate pdf">
@@ -23,7 +24,7 @@ FORM = """
 
 @app.route('/')
 def home():
-    return FORM
+    return render_template_string(FORM)
 
 
 @app.route('/pdf', )
@@ -32,10 +33,11 @@ def get_pdf():
     generate invoice url and return pdf
     :return: str
     """
-    invoice_id = request.get('invoice_id')
-    if not invoice_id:
-        raise BadRequestException('Invoice id is missing')
-    return ''
+    locations = [location for location in request.args.get('location', '').split(' ')]
+    if not locations:
+        log.error("Locations not provided.")
+        return render_template_string(FORM, errors="Missing locations.")
+    return ','.join(locations)
 
 
 @app.route('/invoice')

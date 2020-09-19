@@ -1,12 +1,10 @@
 import json
 import os
-import tempfile
 
 import pytest
-
+from flask import app
 from flask.testing import FlaskClient
 
-from src.app import app
 
 
 @pytest.fixture
