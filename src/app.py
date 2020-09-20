@@ -5,6 +5,8 @@ import os
 from flask import Flask, request, render_template_string
 from flask_sqlalchemy import SQLAlchemy
 
+import requests
+from weasyprint import HTML
 
 app = Flask(__name__)
 app.config.from_object(os.environ.get('APP_SETTINGS'))
@@ -27,17 +29,20 @@ def home():
     return render_template_string(FORM)
 
 
-@app.route('/pdf', )
+@app.route('/pdf')
 def get_pdf():
     """
     generate invoice url and return pdf
     :return: str
     """
-    locations = [location for location in request.args.get('location', '').split(' ')]
+    locations = [location for location in request.args.get('location', '').split(' ') if location]
+    log.info(f"Receive {locations}")
     if not locations:
         log.error("Locations not provided.")
         return render_template_string(FORM, errors="Missing locations.")
-    return ','.join(locations)
+    for i, location in enumerate(locations):
+        HTML(location).write_pdf(f'pdf_{i}.pdf')
+    return f"pdf created for {locations}"
 
 
 @app.route('/invoice')
