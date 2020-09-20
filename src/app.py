@@ -1,6 +1,7 @@
 """Main application file."""
 import logging
 import os
+import time
 
 from flask import Flask, request, render_template_string
 from flask_sqlalchemy import SQLAlchemy
@@ -29,6 +30,16 @@ def home():
     return render_template_string(FORM)
 
 
+def generate_pdf(url):
+    """
+    generate pdf document
+
+    :param url: valid url with http/https
+    :return:
+    """
+    HTML(url).write_pdf(str(time.time()))
+
+
 @app.route('/pdf')
 def get_pdf():
     """
@@ -40,8 +51,8 @@ def get_pdf():
     if not locations:
         log.error("Locations not provided.")
         return render_template_string(FORM, errors="Missing locations.")
-    for i, location in enumerate(locations):
-        HTML(location).write_pdf(f'pdf_{i}.pdf')
+    for location in locations:
+        generate_pdf(location)
     return f"pdf created for {locations}"
 
 
