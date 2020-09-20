@@ -56,15 +56,6 @@ def get_pdf():
     return f"pdf created for {locations}"
 
 
-@app.route('/invoice')
-def get_invoice():
-    """
-    generate invoice url and return
-    :return: str
-    """
-    return ''
-
-
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
