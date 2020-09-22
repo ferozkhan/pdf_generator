@@ -46,14 +46,14 @@ def get_pdf():
     generate invoice url and return pdf
     :return: str
     """
-    locations = [location for location in request.args.get('location', '').split(' ') if location]
-    log.info(f"Receive {locations}")
-    if not locations:
+    urls = [location for location in request.args.get('location', '').split(' ') if location]
+    log.info(f"Receive {urls}")
+    if not urls:
         log.error("Locations not provided.")
         return render_template_string(FORM, errors="Missing locations.")
-    for location in locations:
-        generate_pdf(location)
-    return f"pdf created for {locations}"
+    for url in urls:
+        generate_pdf(url)
+    return f"pdf created for {urls}"
 
 
 if __name__ == '__main__':
