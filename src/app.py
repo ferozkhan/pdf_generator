@@ -1,6 +1,7 @@
 """Main application file."""
 import logging
 import os
+import tempfile
 import time
 
 from flask import Flask, request, render_template_string, send_from_directory
@@ -30,14 +31,14 @@ def home():
     return render_template_string(FORM)
 
 
-def generate_pdf(url, filename):
+def generate_pdf(url, location, filename):
     """
     generate pdf document
 
     :param url: valid url with http/https
     :return:
     """
-    HTML(url).write_pdf(filename)
+    HTML(url).write_pdf(os.path.join(location, filename))
 
 
 @app.route('/pdf')
@@ -47,14 +48,17 @@ def get_pdf():
     :return: str
     """
     urls = [location for location in request.args.get('location', '').split(' ') if location]
+    url = urls[0]
     log.info(f"Receive {urls}")
-    if not urls:
+    if not url:
         log.error("Locations not provided.")
         return render_template_string(FORM, errors="Missing locations.")
-    for url in urls:
-        filename = f"{str(time.time())}.pdf"
-        generate_pdf(url, filename)
-    return send_from_directory(app.config['CLIENT_PDF'],
+
+    tmp_dir = tempfile.gettempdir()
+    filename = f"{str(time.time())}.pdf"
+
+    generate_pdf(url, tmp_dir, filename)
+    return send_from_directory(tmp_dir,
                                filename=filename, as_attachment=True)
 
 
