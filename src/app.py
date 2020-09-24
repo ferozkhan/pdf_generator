@@ -3,6 +3,7 @@ import logging
 import os
 import tempfile
 import time
+import zipfile
 
 from flask import Flask, request, render_template_string, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
@@ -31,14 +32,26 @@ def home():
     return render_template_string(FORM)
 
 
-def generate_pdf(url, location, filename):
+def generate_pdf(url, location, filename, ext='.pdf'):
     """
     generate pdf document
 
+    :param location:
+    :param filename:
+    :param ext:
     :param url: valid url with http/https
     :return:
     """
-    HTML(url).write_pdf(os.path.join(location, filename))
+    HTML(url).write_pdf(os.path.join(location, str(filename) + ext))
+
+
+def prepare_zip(zipname, zip_dir):
+    log.info("writing zip.")
+    with zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED) as zf:
+        for root, dirs, files in os.walk(zip_dir):
+            for file in files:
+                if file.endswith("pdf"):
+                    zf.write(os.path.join(root, file))
 
 
 @app.route('/pdf')
@@ -48,18 +61,19 @@ def get_pdf():
     :return: str
     """
     urls = [location for location in request.args.get('location', '').split(' ') if location]
-    url = urls[0]
     log.info(f"Receive {urls}")
-    if not url:
+    if not urls:
         log.error("Locations not provided.")
         return render_template_string(FORM, errors="Missing locations.")
 
     tmp_dir = tempfile.gettempdir()
-    filename = f"{str(time.time())}.pdf"
+    for filename, url in enumerate(urls):
+        generate_pdf(url, tmp_dir, filename)
 
-    generate_pdf(url, tmp_dir, filename)
-    return send_from_directory(tmp_dir,
-                               filename=filename, as_attachment=True)
+    prepare_zip('pdfs.zip', tmp_dir)
+    return send_from_directory(
+        tmp_dir, filename='pdfs.zip', as_attachment=True
+    )
 
 
 if __name__ == '__main__':
