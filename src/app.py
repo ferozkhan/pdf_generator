@@ -2,18 +2,17 @@
 import logging
 import os
 import tempfile
-import time
 import zipfile
 
-from flask import Flask, request, render_template_string, send_from_directory
+from flask import Flask, render_template_string, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
-
 from weasyprint import HTML
 
 app = Flask(__name__)
 app.config.from_object(os.environ.get('APP_SETTINGS'))
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
-app.config['CLIENT_PDF'] = os.path.dirname(os.path.realpath(__file__)) + '/client_pdf'
+app.config['CLIENT_PDF'] = os.path.dirname(
+    os.path.realpath(__file__)) + '/client_pdf'
 db = SQLAlchemy(app)
 
 log = logging.getLogger(__name__)
@@ -60,7 +59,8 @@ def get_pdf():
     generate invoice url and return pdf
     :return: str
     """
-    urls = [location for location in request.args.get('location', '').split(' ') if location]
+    urls = [location for location in request.args.get(
+        'location', '').split(' ') if location]
     log.info(f"Receive {urls}")
     if not urls:
         log.error("Locations not provided.")
