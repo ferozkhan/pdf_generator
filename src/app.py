@@ -4,9 +4,11 @@ import os
 import tempfile
 import zipfile
 
-from flask import Flask, render_template_string, request, send_from_directory, send_file
-from flask_sqlalchemy import SQLAlchemy
 from weasyprint import HTML
+
+from flask import (Flask, render_template_string, request, send_file,
+                   send_from_directory)
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config.from_object(os.environ.get('APP_SETTINGS'))
