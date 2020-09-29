@@ -4,7 +4,7 @@ import os
 import tempfile
 import zipfile
 
-from flask import Flask, render_template_string, request, send_from_directory
+from flask import Flask, render_template_string, request, send_from_directory, send_file
 from flask_sqlalchemy import SQLAlchemy
 from weasyprint import HTML
 
@@ -71,8 +71,10 @@ def get_pdf():
         generate_pdf(url, tmp_dir, filename)
 
     prepare_zip('pdfs.zip', tmp_dir)
-    return send_from_directory(
-        tmp_dir, filename='pdfs.zip', as_attachment=True
+    return send_file(
+        os.path.join(tmp_dir, "pdfs.zip"),
+        attachment_filename='pdfs.zip',
+        as_attachment=True
     )
 
 
