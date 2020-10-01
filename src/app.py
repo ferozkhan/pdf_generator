@@ -70,6 +70,7 @@ def get_pdf():
 
     tmp_dir = tempfile.gettempdir()
     for filename, url in enumerate(urls):
+        # TODO: make it async to speed up process
         generate_pdf(url, tmp_dir, filename)
 
     prepare_zip('pdfs.zip', tmp_dir)
