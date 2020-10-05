@@ -1,4 +1,5 @@
 """Main application file."""
+import asyncio
 import logging
 import os
 import tempfile
@@ -33,7 +34,7 @@ def home():
     return render_template_string(FORM)
 
 
-def generate_pdf(url, location, filename, ext='.pdf'):
+async def generate_pdf(url, location, filename, ext='.pdf'):
     """
     generate pdf document
 
@@ -43,7 +44,8 @@ def generate_pdf(url, location, filename, ext='.pdf'):
     :param url: valid url with http/https
     :return:
     """
-    HTML(url).write_pdf(os.path.join(location, str(filename) + ext))
+    print(f"generating {url}")
+    await HTML(url).write_pdf(os.path.join(location, str(filename) + ext))
 
 
 def prepare_zip(zipname, zip_dir):
@@ -68,10 +70,11 @@ def get_pdf():
         log.error("Locations not provided.")
         return render_template_string(FORM, errors="Missing locations.")
 
+    loop = asyncio.get_event_loop()
     tmp_dir = tempfile.gettempdir()
     for filename, url in enumerate(urls):
-        # TODO: make it async to speed up process
-        generate_pdf(url, tmp_dir, filename)
+        loop.run_until_complete(generate_pdf(url, tmp_dir, filename))
+        print(f"done {url}")
 
     prepare_zip('pdfs.zip', tmp_dir)
     return send_file(
