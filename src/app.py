@@ -19,6 +19,7 @@ app.config['CLIENT_PDF'] = os.path.dirname(
 db = SQLAlchemy(app)
 
 log = logging.getLogger(__name__)
+loop = asyncio.get_event_loop()
 
 FORM = """
 {% if errors %}<p>Error: {{errors}}<p>{% endif %}
@@ -70,7 +71,6 @@ def get_pdf():
         log.error("Locations not provided.")
         return render_template_string(FORM, errors="Missing locations.")
 
-    loop = asyncio.get_event_loop()
     tmp_dir = tempfile.gettempdir()
     for filename, url in enumerate(urls):
         loop.run_until_complete(generate_pdf(url, tmp_dir, filename))
