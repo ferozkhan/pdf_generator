@@ -2,8 +2,10 @@
 import asyncio
 import logging
 import os
+import pathlib
 import tempfile
 import zipfile
+from typing import Union
 
 from weasyprint import HTML
 
@@ -45,17 +47,23 @@ async def generate_pdf(url, location, filename, ext='.pdf'):
     :param url: valid url with http/https
     :return:
     """
-    print(f"generating {url}")
     await HTML(url).write_pdf(os.path.join(location, str(filename) + ext))
 
 
 def prepare_zip(zipname, zip_dir):
-    log.info("writing zip.")
     with zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED) as zf:
         for root, dirs, files in os.walk(zip_dir):
             for file in files:
                 if file.endswith("pdf"):
                     zf.write(os.path.join(root, file))
+
+
+def get_html(url: str) -> HTML:
+    return HTML(url)
+
+
+def prepare_pdf():
+    pass
 
 
 @app.route('/pdf')
@@ -71,11 +79,12 @@ def get_pdf():
         log.error("Locations not provided.")
         return render_template_string(FORM, errors="Missing locations.")
 
+    prepare_pdf()
     tmp_dir = tempfile.gettempdir()
     for filename, url in enumerate(urls):
         loop.run_until_complete(generate_pdf(url, tmp_dir, filename))
-        print(f"done {url}")
 
+    log.info("writing zip.")
     prepare_zip('pdfs.zip', tmp_dir)
     return send_file(
         os.path.join(tmp_dir, "pdfs.zip"),
